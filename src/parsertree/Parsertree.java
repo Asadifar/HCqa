@@ -1,4 +1,4 @@
-//  tokenize,2- pos tagging 3- parse tree 4- dependency parser 
+//1  tokenize,2- pos tagging 3- parse tree 4- dependency parser 
 
 package parsertree;
 //java imports
@@ -9,10 +9,10 @@ package parsertree;
 
 import edu.stanford.nlp.ie.crf.*;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
-import org.apache.jena.util.FileManager;
+//import org.apache.jena.util.FileManager;
 
 //
-import Jwi.Main;
+//import Jwi.Main;
 import TAGmeWebService.tagmewebservice;
 import static TAGmeWebService.tagmewebservice.NumTagMeLinks;
 import static TAGmeWebService.tagmewebservice.WikiLinksInformationArray;
