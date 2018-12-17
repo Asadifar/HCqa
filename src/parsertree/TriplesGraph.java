@@ -19,12 +19,12 @@ import static parsertree.Sentence.govIsMatchedWhithVerbs;
 import static parsertree.Sentence.tdl;
 import static parsertree.Sentence.verbs;
 import static parsertree.Sentence.wordsNumber;
-import static parsertree.Verb.BeCopularMainVerb;
-import static parsertree.Verb.NotCopularVerb;
+import static parsertree.Sentence.BeCopularMainVerb;
+import static parsertree.Sentence.NotCopularVerb;
 import static parsertree.Word.BeCapableOfMemberOfNounRelation;
 import static parsertree.Word.BeCapableOfMemberOfNounRelationSecondArguman;
 import static parsertree.Word.ComparativeAdjectiveIsQuantityAdjective;
-import static parsertree.Word.FindRerenceOfThat;
+import static parsertree.Sentence.FindRerenceOfThat;
 import static parsertree.Word.IsAQuotationPhrase;
 import static parsertree.Word.IsCapital;
 import static parsertree.Word.IsGenitivePossSubject;
@@ -42,8 +42,8 @@ import static parsertree.Word.relIsIndirectObject;
 public class TriplesGraph {
     public static int EndNum;
     public static int minimalEndNum;
-    static Triple[] triple=new Triple[60];
-     static Triple[] minimalTriple=new Triple[60];
+    static public Triple[] triple=new Triple[5];
+     static public Triple[] minimalTriple=new Triple[5];
      //static Sentence sentence=new Sentence();
         public static int  RightLimitOfWord, LeftLimitOfWord;
        public static String  IndirectObject;
@@ -1583,7 +1583,7 @@ public class TriplesGraph {
             
     return i;
     }
-    public static int makeTriplesFromFillers1(int i,String str,int verbNum){
+   public static int makeTriplesFromFillers1(int i,String str,int verbNum){
      int numberOfDirectObjects=0;
 
 
@@ -2150,7 +2150,9 @@ public class TriplesGraph {
             if(rel2.matches("dep")||rel2.matches("nmod:of")||rel2.matches("nmod:poss")||rel2.matches("nmod:for")||rel2.matches("nmod:in")||rel2.matches("nmod:at")||rel2.matches("nmod:on")||rel2.matches("nmod:by")||rel2.matches("nmod:near")||rel2.matches("nmod:from")
                     ||rel2.matches("nmod:with")||rel2.matches("nmod:under")||rel2.matches("nmod:against")||rel2.matches("nmod:during")
                     ||rel2.matches("nmod:to")||rel2.matches("nmod:agent")||rel2.matches("nmod:like")||rel2.contains("nmod:")){
-                    minimalTriple[i].subject=Sentence.word[gov2Index].POSword; minimalTriple[i].subjectStart=gov2Index;minimalTriple[i].subjectEnd=gov2Index;extendToNounGroupMinimal(0,i);
+                    minimalTriple[i].subject=Sentence.word[gov2Index].POSword; 
+                    minimalTriple[i].subjectStart=gov2Index;
+                    minimalTriple[i].subjectEnd=gov2Index;extendToNounGroupMinimal(0,i);
                     minimalTriple[i].predicate="has a relation with"; minimalTriple[i].predicateStart=0;
                     minimalTriple[i].object=Sentence.word[dep2Index].POSword; minimalTriple[i].objectStart=dep2Index;minimalTriple[i].objectEnd=dep2Index;extendToNounGroupMinimal(2,i);
                   //minimalTriple[i].tripleType="Genitive relation(missed predicate):Function1 ";
@@ -2211,8 +2213,11 @@ public class TriplesGraph {
     public static void initialization(String line){
                    //CompSuper=0;            
                    minimalEndNum=0;
+              
+          
                    Sentence sentence=new Sentence(line);
-                   for(int i=0;i<60;i++){
+                   
+                   for(int i=0;i<5;i++){
                       
                      triple[i]=new Triple("","","");
                      minimalTriple[i]=new Triple("","","");

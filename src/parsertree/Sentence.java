@@ -210,7 +210,7 @@ public static int AreRelatedTogether(int current,int counter){
        String rel2,gov2,dep2;   
        dep2="";
        rel2="";
-            List<TypedDependency> tdl=null;
+          //  List<TypedDependency> tdl=null;
 
                          for (TypedDependency t2 : tdl){
                             
@@ -222,7 +222,9 @@ public static int AreRelatedTogether(int current,int counter){
                             str1=tdl.get(index2).gov().toString().split("/");
                             //gov2Index=tdl.get(index2).gov().index();
                             gov2=str1[0]; 
-                            if((gov2.matches(word[current].POSword)& dep2.matches(word[counter].POSword)) || (dep2.matches(word[current].POSword)& gov2.matches(word[counter].POSword)))
+                            if((gov2.matches(word[current].POSword)
+                                    & dep2.matches(word[counter].POSword)) 
+                                    || (dep2.matches(word[current].POSword)& gov2.matches(word[counter].POSword)))
                                     
                                return 1;
                             index2++;  
@@ -417,6 +419,7 @@ public static void Tokenize1(String line,List<TypedDependency> tdl){
      line=line.replaceAll("^","");
     // line=line.replaceAll(":","");
      line=line.replaceAll("  "," ");
+      line=line.replace("?","");
      return line;
    }  
 
@@ -549,6 +552,7 @@ public static String RecognizeLinkedWordPositions(){
        Initialization();
        prestopRemover(line);
        line=stopRemover(line);
+       CounterVerbs=0;
        Tokenize1Pre(line);
       //PositionOfWords(line,lp);
       //String newSent=preprocess(line);
@@ -588,6 +592,131 @@ public static void Initialization(){
                     
                    
    }
+public static int NotCopularVerb(String str){
+       //--------------------------------if verb is am, is , was,.....---------------------------------
+   String[] str1; String dep1,rel1,gov1; 
+    int sw1=1;
+   if((str.equals("was")||str.equals("were")||
+        str.equals("am")||str.equals("is")||
+             str.equals("are")||str.equals("had")||
+             str.equals("has")||str.equals("have")
+             ||str.equals("did")||str.equals("does")
+             )) {
+        
+             for(int j=0;j<Sentence.CounterVerbs;j++){
+              int index1=0;
+             // List<TypedDependency> tdl=null;
+            // Sentence sentence=new Sentence(line);
+              for (TypedDependency t1 : tdl){
+                   //may be verb is copular verb such as did.....serve.verb did should be deleated
+                     str1=tdl.get(index1).dep().toString().split("/");
+                     dep1=str1[0];
+                     str1=tdl.get(index1).reln().toString().split("/");
+                     rel1=str1[0];
+                     str1=tdl.get(index1).gov().toString().split("/");
+                     gov1=str1[0];
+                    if (dep1.equals(Sentence.verbs[j].verbs)& gov1.equals(str) & rel1.equals("aux"))
+                    { index1++;sw1=1;return sw1;}
+                    else
+                    index1++;
+                }
+             }
+       
+       
+       sw1=0; }
+   return sw1;//0 not main verb,1 main verb
+   }
+   public static int BeCopularMainVerb(String str,int j ){
+   //--------------------------------if verb is am, is , was,.....---------------------------------
+   String[] str1; String dep1,rel1,gov1; 
+    int sw1=1;
+   if((str.equals("was")||str.equals("were")||
+        str.equals("am")||str.equals("is")||
+             str.equals("are")||str.equals("had")||
+             str.equals("has")||str.equals("have")
+             ||str.equals("did")||str.equals("does")
+             ) & (!Sentence.word[Sentence.verbs[j].verbsPosition+1].POStagword.equals("VBN"))& 
+              !(Sentence.word[Sentence.verbs[j].verbsPosition+1].POStagword.equals("VB"))&
+              !(Sentence.word[Sentence.verbs[j].verbsPosition+1].POStagword.equals("VBP"))&
+              !(Sentence.word[Sentence.verbs[j].verbsPosition+1].POStagword.equals("VBD"))&
+              !(Sentence.word[Sentence.verbs[j].verbsPosition+1].POStagword.equals("VBZ"))
+              ){  
+              
+              int index1=0;
+            // List<TypedDependency> tdl=null;
+              for (TypedDependency t1 : tdl){
+                   //may be verb is copular verb such as did.....serve.verb did should be deleated
+                     str1=tdl.get(index1).dep().toString().split("/");
+                     dep1=str1[0];
+                     str1=tdl.get(index1).reln().toString().split("/");
+                     rel1=str1[0];
+                    if (dep1.equals(str)& ((rel1.equals("ccomp"))||rel1.equals("auxpass")||(rel1.equals("aux"))))
+                    { index1++;sw1=0;return sw1;}
+                    else
+                    index1++;
+                }
+              
+             
+             for(j=0;j<Sentence.CounterVerbs;j++){
+                  index1=0;
+              for (TypedDependency t1 : tdl){
+                   //may be verb is copular verb such as did.....serve.verb did should be deleated
+                     str1=tdl.get(index1).dep().toString().split("/");
+                     dep1=str1[0];
+                     str1=tdl.get(index1).reln().toString().split("/");
+                     rel1=str1[0];
+                     str1=tdl.get(index1).gov().toString().split("/");
+                     gov1=str1[0];
+                    if (dep1.matches(Sentence.verbs[j].verbs)& gov1.matches(str) & rel1.matches("aux"))
+                    { index1++;sw1=0;return sw1;}
+                    if (gov1.matches(Sentence.verbs[j].verbs)& dep1.matches(str) & (rel1.matches("aux")||rel1.matches("auxpass")))
+                    { index1++;sw1=0;return sw1;}
+                    else
+                    index1++;
+                }
+             }
+             }
+     
+           else sw1=0;
+   return sw1;//0 not main verb,1 main verb
+   }
+   //**********
+  
+  public static int FindRerenceOfThat(int index){
+    int index1=0,k,dep1Index,gov1Index;
+    String[] str1; String dep1,rel1,gov1;
+     //List<TypedDependency> tdl=null;
+                //    Sentence sentence=new Sentence(line);
+
+                        for (TypedDependency t2 : tdl){
+                            k=0;
+                            str1=tdl.get(index1).dep().toString().split("/");
+                            dep1=str1[0];
+                            dep1Index=tdl.get(index1).dep().index();
+                            str1=tdl.get(index1).reln().toString().split("/");
+                            rel1=str1[0];
+                            str1=tdl.get(index1).gov().toString().split("/");
+                            gov1Index=tdl.get(index1).gov().index();
+                            gov1=str1[0]; 
+                            if((dep1.matches("that")||dep1.matches("where")||dep1.matches("which")||dep1.matches("who")
+                                    ||dep1.matches("whom")||dep1.matches("That")||dep1.matches("Where")||dep1.matches("Which")||dep1.matches("Who")
+                                    ||dep1.matches("Whom")
+                                    ) & 
+                                    (dep1Index==index & rel1.matches("ref")))
+                                  return gov1Index;
+                            if((gov1.matches("that")||gov1.matches("where")||gov1.matches("which")||gov1.matches("who")
+                                    ||gov1.matches("whom")||gov1.matches("That")||gov1.matches("Where")||gov1.matches("Which")||gov1.matches("Who")
+                                    ||gov1.matches("Whom")
+                                    ) & 
+                                    (gov1Index==index & rel1.matches("nmod:of")))
+                                  return dep1Index;
+                            
+                            index1++;      
+                            }//end for
+      
+      return 0;
+  }
+  
   
 
 }

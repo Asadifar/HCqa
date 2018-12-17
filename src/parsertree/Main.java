@@ -38,7 +38,8 @@ import static parsertree.TriplesGraph.triplesGeneration;
 
 public class Main { 
  public static Model model;
-   
+ public static String line = null;
+
   
 
   
@@ -47,7 +48,6 @@ public class Main {
     
      //defines model for lexicalized parser
      String Input = "../Armin/sampleText/S2352179114200056.txt";
-     String line = null;
     
      try {
                 FileReader fileReader = new FileReader(Input);
