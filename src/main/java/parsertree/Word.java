@@ -1,33 +1,18 @@
 /*
-
-
-
-
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The class of word
  */
 package parsertree;
-
 import edu.stanford.nlp.trees.TypedDependency;
 import java.util.List;
 import static parsertree.Sentence.govIsMatchedWhithVerbs;
-
-
-/**
- *
- * @author mywin
- */
 public class Word {
     
-
-      String  POSword;
-      String POStagword;
-      int  POSwordStart;
-      int  POSwordEnd;
-      //int POSwordNamedEntityState;
-      String POSwordNamedEntityURI;
-      int phraseTagmeLinksRecognizer;
+   String  POSword;
+   String POStagword;
+   int  POSwordStart;
+   int  POSwordEnd;
+   String POSwordNamedEntityURI;
+   int phraseTagmeLinksRecognizer;
    public Word(String w,String tw,int ws,int we){
      POSword=w;
      POStagword=tw;
@@ -62,6 +47,7 @@ public class Word {
                             gov2=str1[0]; 
                             if((gov2.matches(verb)& rel2.matches("advmod")))
                                 if(Sentence.verbs[CounterVerbs].verbs!=""){
+                                    if(!dep2.matches("where") & !dep2.matches("when") & !dep2.matches("Where") & !dep2.matches("When") )
                                     Sentence.verbs[CounterVerbs].verbs=  Sentence.verbs[CounterVerbs].verbs+" "+dep2;  
                                     CounterVerbs++;
                                 }
@@ -109,20 +95,7 @@ public class Word {
               }
       return prep;
   }
-   public static void PrintDependencies(List<TypedDependency> tdl){
-   
-       //..................................prints dependency relations............................................. 
-    int index=0;
-    for (TypedDependency thelp : tdl) { 
-            System.out.print(tdl.get(index).reln());
-            System.out.print('('+tdl.get(index).gov().value()+','+tdl.get(index).dep().value()+')');
-    System.out.println();
-            index++;
-    }
-    System.out.println();
-    
-   }
-   
+ 
    ///////noun functions
    public static int IsNoun(int i){
        if(i>1)
@@ -244,16 +217,7 @@ public class Word {
       else
           return 1;
     }
-     public static int  IsAQuotationPhrase(String rel,int govIndex,int depIndex){
-                for(int i=0;i<Sentence.quotationCounter;i++){
-                   if(Sentence.quotations[i][2].quotation.matches(rel) & Sentence.quotations[i][3].quotation.matches( Sentence.word[govIndex].POSword) & Sentence.quotations[i][4].quotation.matches( Sentence.word[depIndex].POSword) & Sentence.quotations[i][5].quotation=="0"){
-                   return 1;
-                   
-                   }
-                   
-                }
-        return 0;
-    }
+    
      public static int IsCapital(int i){
    if(Sentence.wordPre[i].POSword.startsWith("A")||Sentence.wordPre[i].POSword.startsWith("B")||Sentence.wordPre[i].POSword.startsWith("C")
            ||Sentence.wordPre[i].POSword.startsWith("A")||Sentence.wordPre[i].POSword.startsWith("A")||Sentence.wordPre[i].POSword.startsWith("C")
